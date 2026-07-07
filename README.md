@@ -4,8 +4,9 @@ A lightweight approval/rejection workflow with an Express/Prisma backend and a R
 
 ## Features
 - Create tasks via API or UI.
-- List tasks filtered by status (Pending, Approved, Rejected).
+- List tasks filtered by status (Pending, Approved, Rejected, Blocked).
 - Approve or reject tasks with optional reviewer comments.
+- Block tasks that need more information with a mandatory blocker note.
 - Simple frontend dashboard for reviewers and task creators.
 
 ## Getting started
@@ -30,4 +31,5 @@ The dashboard runs on `http://localhost:3000` and communicates with the backend.
 - Create a new task using the form on the dashboard.
 - Use the buttons to approve or reject pending tasks.
 - Rejected tasks require a reviewer comment for auditing.
+- Blocked tasks require a blocker comment and show up under the "Blocked" filter.
 - Refresh the list automatically after each action.

@@ -109,9 +109,9 @@
   color: #b91c1c;
 }
 
-.status-pending .status-label {
-  background: #eef2ff;
-  color: #4338ca;
+.status-blocked .status-label {
+  background: #fef3c7;
+  color: #b45309;
 }
 
 .task-card__description {
@@ -119,10 +119,15 @@
   color: #374151;
 }
 
-.task-card__reviewer {
+.task-card__reviewer,
+.task-card__blocker {
   margin: 0;
   font-size: 0.85rem;
   color: #475569;
+}
+
+.task-card__blocker {
+  font-weight: 600;
 }
 
 .task-actions {
@@ -144,7 +149,8 @@
   color: #fff;
 }
 
-.reject-form {
+.reject-form,
+.block-form {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   display: flex;
@@ -153,7 +159,8 @@
   padding: 0.5rem;
 }
 
-.reject-form textarea {
+.reject-form textarea,
+.block-form textarea {
   border: 1px solid #d1d5db;
   padding: 0.5rem;
   border-radius: 6px;
@@ -163,6 +170,11 @@
 
 .reject-form button {
   background: #dc2626;
+  color: #fff;
+}
+
+.block-form button {
+  background: #f97316;
   color: #fff;
 }
 

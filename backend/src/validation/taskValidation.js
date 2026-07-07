@@ -1,4 +1,4 @@
-const VALID_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'];
+const VALID_STATUSES = ['PENDING', 'APPROVED', 'REJECTED', 'BLOCKED'];
 
 const validateTaskPayload = (payload) => {
   if (!payload || typeof payload !== 'object') {
@@ -32,4 +32,20 @@ const validateRejectPayload = (comment) => {
   return null;
 };
 
-module.exports = { VALID_STATUSES, validateTaskPayload, validateRejectPayload };
+const validateBlockPayload = (comment) => {
+  const trimmed = comment?.trim();
+  if (!trimmed) {
+    return 'Blocker comment is required when blocking a task';
+  }
+  if (trimmed.length < 5) {
+    return 'Blocker comment must include at least 5 characters';
+  }
+  return null;
+};
+
+module.exports = {
+  VALID_STATUSES,
+  validateTaskPayload,
+  validateRejectPayload,
+  validateBlockPayload
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TaskCard from './TaskCard';
-import { fetchTasks, createTask, approveTask, rejectTask } from '../services/api';
+import { fetchTasks, createTask, approveTask, rejectTask, blockTask } from '../services/api';
 import './TaskList.css';
 
 const TaskList = ({ statusFilter }) => {
@@ -73,6 +73,18 @@ const TaskList = ({ statusFilter }) => {
     }
   };
 
+  const handleBlock = async (taskId, comment) => {
+    setError('');
+    setMessage('');
+    try {
+      await blockTask(taskId, comment);
+      setMessage('Task blocked.');
+      loadTasks();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <section className='task-list'>
       <form className='task-form' onSubmit={handleCreate}>
@@ -118,6 +130,7 @@ const TaskList = ({ statusFilter }) => {
               task={task}
               onApprove={handleApprove}
               onReject={handleReject}
+              onBlock={handleBlock}
             />
           ))
         ) : (

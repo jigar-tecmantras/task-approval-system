@@ -5,7 +5,8 @@ import './App.css';
 const FILTERS = [
   { label: 'Pending', value: 'PENDING' },
   { label: 'Approved', value: 'APPROVED' },
-  { label: 'Rejected', value: 'REJECTED' }
+  { label: 'Rejected', value: 'REJECTED' },
+  { label: 'Blocked', value: 'BLOCKED' }
 ];
 
 const App = () => {

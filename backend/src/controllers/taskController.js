@@ -1,10 +1,23 @@
 const prisma = require('../prisma/client');
-const { VALID_STATUSES, validateTaskPayload, validateRejectPayload } = require('../validation/taskValidation');
+const {
+  VALID_STATUSES,
+  validateTaskPayload,
+  validateRejectPayload,
+  validateBlockPayload
+} = require('../validation/taskValidation');
 
 const createError = (status, message) => {
   const err = new Error(message);
   err.status = status;
   return err;
+};
+
+const ensurePending = (task, next, action) => {
+  if (task.status !== 'PENDING') {
+    next(createError(409, `Cannot ${action} a task that is currently ${task.status.toLowerCase()}.`));
+    return false;
+  }
+  return true;
 };
 
 const getTasks = async (req, res, next) => {
@@ -47,8 +60,8 @@ const approveTask = async (req, res, next) => {
     if (!task) {
       return next(createError(404, 'Task not found'));
     }
-    if (task.status === 'APPROVED') {
-      return next(createError(409, 'Task is already approved'));
+    if (!ensurePending(task, next, 'approve')) {
+      return;
     }
     const payload = { status: 'APPROVED' };
     if (req.body.comment && req.body.comment.trim()) {
@@ -71,8 +84,8 @@ const rejectTask = async (req, res, next) => {
     if (!task) {
       return next(createError(404, 'Task not found'));
     }
-    if (task.status === 'REJECTED') {
-      return next(createError(409, 'Task is already rejected'));
+    if (!ensurePending(task, next, 'reject')) {
+      return;
     }
     const validation = validateRejectPayload(req.body.comment);
     if (validation) {
@@ -88,4 +101,28 @@ const rejectTask = async (req, res, next) => {
   }
 };
 
-module.exports = { getTasks, createTask, approveTask, rejectTask };
+const blockTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const task = await prisma.task.findUnique({ where: { id: Number(id) } });
+    if (!task) {
+      return next(createError(404, 'Task not found'));
+    }
+    if (!ensurePending(task, next, 'block')) {
+      return;
+    }
+    const validation = validateBlockPayload(req.body.comment);
+    if (validation) {
+      return next(createError(400, validation));
+    }
+    const updated = await prisma.task.update({
+      where: { id: Number(id) },
+      data: { status: 'BLOCKED', blockerComment: req.body.comment.trim() }
+    });
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getTasks, createTask, approveTask, rejectTask, blockTask };

@@ -38,3 +38,11 @@ export const rejectTask = (taskId, comment) => {
     body: JSON.stringify({ comment })
   }).then(handleErrors);
 };
+
+export const blockTask = (taskId, comment) => {
+  return fetch(`${API_BASE}/${taskId}/block`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comment })
+  }).then(handleErrors);
+};
