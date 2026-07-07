@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  background: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
